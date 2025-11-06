@@ -212,7 +212,7 @@
   </main>
 
   <footer>
-    <p>© 2025 EcoWord Soap | Jabones Naturales | Todos los derechos reservados</p>
+    <p>© 2025 Molde Magico | Todos los derechos reservados</p>
   </footer>
 
   <script>
@@ -222,8 +222,49 @@
     if (menuToggle && siteNav) {
       menuToggle.addEventListener('click', () => {
         siteNav.classList.toggle('open');
+        // Cambiar el ícono del menú
+        if (siteNav.classList.contains('open')) {
+          menuToggle.innerHTML = '×'; // Icono de cerrar
+          menuToggle.setAttribute('aria-label', 'Cerrar menú');
+        } else {
+          menuToggle.innerHTML = '☰'; // Icono de hamburguesa
+          menuToggle.setAttribute('aria-label', 'Abrir menú');
+        }
       });
     }
+
+    // Manejo de submenús en móvil
+    const hasSubmenu = document.querySelectorAll('.has-submenu');
+    hasSubmenu.forEach(item => {
+      const link = item.querySelector('a');
+      link.addEventListener('click', (e) => {
+        if (window.innerWidth <= 1024) {
+          // Prevenir la navegación en el primer clic para abrir el submenú
+          if (!item.classList.contains('open')) {
+            e.preventDefault();
+            // Cerrar otros submenús abiertos
+            document.querySelectorAll('.has-submenu.open').forEach(openItem => {
+              if (openItem !== item) {
+                openItem.classList.remove('open');
+              }
+            });
+            item.classList.add('open');
+          } else {
+            // Si ya está abierto, el segundo clic navegará
+            item.classList.remove('open');
+          }
+        }
+      });
+    });
+
+    // Cerrar el menú si se hace clic fuera de él
+    document.addEventListener('click', (e) => {
+      if (siteNav.classList.contains('open') && !siteNav.contains(e.target) && !menuToggle.contains(e.target)) {
+        siteNav.classList.remove('open');
+        menuToggle.innerHTML = '☰';
+        menuToggle.setAttribute('aria-label', 'Abrir menú');
+      }
+    });
   </script>
 </body>
 
